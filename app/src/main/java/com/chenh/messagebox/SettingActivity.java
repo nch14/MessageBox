@@ -11,6 +11,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.chenh.messagebox.fb.FBGetApi;
 import com.chenh.messagebox.sina.AccessTokenKeeper;
 import com.chenh.messagebox.sina.Constants;
 import com.facebook.AccessToken;
@@ -136,6 +137,7 @@ public class SettingActivity extends AppCompatActivity {
                     if (accessToken == null || accessToken.isExpired()) {
                         LoginManager.getInstance().logInWithReadPermissions(SettingActivity.this, Arrays.asList("public_profile", "user_friends"));
                     }
+                    FBGetApi.getFB();
 
                     break;
             }
@@ -164,6 +166,8 @@ public class SettingActivity extends AppCompatActivity {
 
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
+
+        FBGetApi.getFB();
 
     }
 

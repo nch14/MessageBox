@@ -1,0 +1,76 @@
+package com.chenh.messagebox.fb;
+
+import android.accounts.NetworkErrorException;
+
+import com.facebook.AccessToken;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+/**
+ * Created by chenh on 2016/7/19.
+ */
+public class FBGetApi {
+
+    public static final String NEWS_FIELD="https://graph.facebook.com/me/home";
+
+    public static void getFB(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                get(NEWS_FIELD+"?access_token="+ AccessToken.getCurrentAccessToken().getToken());
+            }
+        }).start();//这个start()方法不要忘记了
+    }
+
+    private static String get(String url) {
+        HttpURLConnection conn = null;
+        try {
+            // 利用string url构建URL对象
+            URL mURL = new URL(url);
+            conn = (HttpURLConnection) mURL.openConnection();
+
+            conn.setRequestMethod("GET");
+            conn.setReadTimeout(5000);
+            conn.setConnectTimeout(10000);
+
+            int responseCode = conn.getResponseCode();
+            if (responseCode == 200) {
+
+                InputStream is = conn.getInputStream();
+                String response = getStringFromInputStream(is);
+                return response;
+            } else {
+                throw new NetworkErrorException("response status is "+responseCode);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+        }
+
+        return null;
+    }
+
+    private static String getStringFromInputStream(InputStream is)
+            throws IOException {
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        // 模板代码 必须熟练
+        byte[] buffer = new byte[1024];
+        int len = -1;
+        while ((len = is.read(buffer)) != -1) {
+            os.write(buffer, 0, len);
+        }
+        is.close();
+        String state = os.toString();// 把流中的数据转换成字符串,采用的编码是utf-8(模拟器默认编码)
+        os.close();
+        return state;
+    }
+
+}

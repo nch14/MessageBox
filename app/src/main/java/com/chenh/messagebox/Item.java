@@ -3,6 +3,7 @@ package com.chenh.messagebox;
 import android.graphics.Bitmap;
 
 import com.chenh.messagebox.util.BmiddleDownloader;
+import com.chenh.messagebox.util.DateUtil;
 import com.sina.weibo.sdk.openapi.models.Geo;
 import com.sina.weibo.sdk.openapi.models.Status;
 import com.sina.weibo.sdk.openapi.models.User;
@@ -10,6 +11,7 @@ import com.sina.weibo.sdk.openapi.models.Visible;
 import com.sina.weibo.sdk.utils.BitmapHelper;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by chenh on 2016/7/17.
@@ -23,6 +25,8 @@ public class Item {
 
     public final static int TWITTER=3;
 
+    public final static int TIP=4;
+
     /**转发的微博**/
     public Item sourceItem;
 
@@ -30,7 +34,7 @@ public class Item {
 
     public Bitmap userHead;
 
-
+    public Date rawDate;
 
 
     /**来源**/
@@ -94,7 +98,8 @@ public class Item {
 
     public Item(Status status){
         mid=status.mid;
-        created_at=status.created_at;
+        rawDate=new Date(status.created_at);
+        created_at= DateUtil.getViewAllDate(rawDate);
         text=status.text;
         user=status.user;
         bmiddle_pic=status.bmiddle_pic;

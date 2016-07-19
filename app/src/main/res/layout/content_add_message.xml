@@ -19,6 +19,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/editText"
             android:hint="说点什么吧……"
+            android:maxLength="140"
             android:inputType="textMultiLine"
             android:scrollbars="vertical"
             android:background="@android:drawable/edit_text"
