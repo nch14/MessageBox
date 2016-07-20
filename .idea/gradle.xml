@@ -8,14 +8,18 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/Library" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/waterDropListView" />
             <option value="$PROJECT_DIR$/weiboSDK" />
           </set>
         </option>
         <option name="myModules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/Library" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/waterDropListView" />
             <option value="$PROJECT_DIR$/weiboSDK" />
           </set>
         </option>

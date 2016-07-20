@@ -5,17 +5,12 @@ import com.sina.weibo.sdk.openapi.models.Status;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
 
 /**
  * Created by chenh on 2016/7/17.
  */
 public class LocalItem {
     public ArrayList<Item> items;
-
-
-
 
     public Item endItem;
 
@@ -36,7 +31,7 @@ public class LocalItem {
         items=new ArrayList<>();
         endItem=new Item();
         endItem.where=Item.TIP;
-        items.add(endItem);
+        //items.add(endItem);
     }
 
     public void addItem(Item item){
@@ -47,7 +42,7 @@ public class LocalItem {
     }
 
     public void addItem(ArrayList<Status> statuses){
-        items.remove(endItem);
+        //items.remove(endItem);
 
         if (statuses==null)
             return;
@@ -75,17 +70,12 @@ public class LocalItem {
             }
         }
         sort();
-        items.add(endItem);
+        //items.add(endItem);
     }
-
-
 
     public void sort(){
         Collections.sort(items,comparator);
     }
-
-
-
 
     Comparator<Item> comparator = new Comparator<Item>(){
         @Override
@@ -96,10 +86,4 @@ public class LocalItem {
                 return rhs.where-lhs.where;
         }
     };
-
-
-
-
-
-
 }

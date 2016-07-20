@@ -8,7 +8,7 @@
     tools:context="com.chenh.messagebox.ContentActivity"
     tools:showIn="@layout/activity_content">
 
-    <ListView
+    <com.lhh.ptrrv.library.PullToRefreshRecyclerView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:id="@+id/listView" />
