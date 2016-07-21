@@ -5,7 +5,8 @@
 
 
     <string name="loading">loading...</string>
-
+    <string name="listfooterview_normal">查看更多</string>
+    <string name="listfooterview_ready">松开载入更多</string>
 
     <!-- 功能列表 -->
     <string name="weibosdk_demo_feature_oauth">微博授权</string>

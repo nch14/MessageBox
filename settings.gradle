@@ -1,2 +1,2 @@
-include ':app', ':Library', ':waterDropListView'
+include ':app', ':Library'
 include ':weiboSDK'

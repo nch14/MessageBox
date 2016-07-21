@@ -43,6 +43,8 @@ public class BmiddleDownloader {
                 for (int i=0;i<urls.size();i++){
                     String url=urls.get(i).replace("thumbnail","bmiddle");
                     bitmaps.add(returnBitMap(url));
+                    //bitmaps.add(returnBitMap(urls.get(i)));
+
                 }
             }
         }).start();
