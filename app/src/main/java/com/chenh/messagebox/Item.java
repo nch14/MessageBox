@@ -37,6 +37,17 @@ public class Item {
     public Date rawDate;
 
 
+    public String userScreenName;
+
+    public String userId;
+
+    public String userImageURL;
+
+    public String ContentId;
+
+
+
+
     /**来源**/
     public int where;
     /** 创建时间 */
@@ -101,7 +112,20 @@ public class Item {
         rawDate=new Date(status.created_at);
         created_at= DateUtil.getViewAllDate(rawDate);
         text=status.text;
+        //--------------------User的解析--------------------
         user=status.user;
+        userId=status.user.id;
+        userScreenName=status.user.screen_name;
+        userImageURL=status.user.profile_image_url;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                userHead=BmiddleDownloader.returnBitMap(user.profile_image_url);
+            }
+        }).start();
+
+        //--------------------------------------------------
+
         bmiddle_pic=status.bmiddle_pic;
         where=WEIBO;
 
@@ -110,16 +134,37 @@ public class Item {
             BmiddleDownloader.downBitMap(status.pic_urls,allPics);
         }
 
+        if (status.retweeted_status!=null){
+            sourceItem=new Item(status.retweeted_status);
+        }
+    }
+
+
+    public Item(twitter4j.Status status){
+        mid=""+status.getId();
+        rawDate=status.getCreatedAt();
+        created_at= DateUtil.getViewAllDate(rawDate);
+        text=status.getText();
+        //--------------------User的解析--------------------
+        userId=""+status.getUser().getId();
+        userScreenName=status.getUser().getScreenName();
+        userImageURL=status.getUser().getProfileImageURL();
         new Thread(new Runnable() {
             @Override
             public void run() {
-                userHead=BmiddleDownloader.returnBitMap(user.profile_image_url);
+                userHead=BmiddleDownloader.returnBitMap(userImageURL);
             }
         }).start();
+        //--------------------------------------------------
+        where=TWITTER;
 
+        if(status.getExtendedMediaEntities()!=null){
+            allPics=new ArrayList<>();
+            //BmiddleDownloader.downBitMap(status.pic_urls,allPics);
+        }
 
-        if (status.retweeted_status!=null){
-            sourceItem=new Item(status.retweeted_status);
+        if (status.getRetweetedStatus()!=null){
+            sourceItem=new Item(status.getRetweetedStatus());
         }
     }
 }

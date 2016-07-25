@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/Library/Library.iml" filepath="$PROJECT_DIR$/Library/Library.iml" />
       <module fileurl="file://$PROJECT_DIR$/MessageBox.iml" filepath="$PROJECT_DIR$/MessageBox.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/instagram/instagram.iml" filepath="$PROJECT_DIR$/instagram/instagram.iml" />
       <module fileurl="file://$PROJECT_DIR$/weiboSDK/weiboSDK.iml" filepath="$PROJECT_DIR$/weiboSDK/weiboSDK.iml" />
     </modules>
   </component>

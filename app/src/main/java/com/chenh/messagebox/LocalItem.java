@@ -40,7 +40,7 @@ public class LocalItem {
         else
             items.add(item);
     }
-
+    //添加新浪微博
     public void addItem(ArrayList<Status> statuses){
         //items.remove(endItem);
 
@@ -72,6 +72,18 @@ public class LocalItem {
         sort();
         //items.add(endItem);
     }
+
+    //添加推文
+    public void addTwitterItems(ArrayList<twitter4j.Status> statuses){
+        if (statuses==null)
+            return;
+        for(int i=0;i<statuses.size();i++){
+            items.add(new Item(statuses.get(i)));
+        }
+        sort();
+    }
+
+
 
     public void sort(){
         Collections.sort(items,comparator);

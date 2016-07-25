@@ -23,8 +23,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chenh.messagebox.ListView.view.WaterDropListView;
+import com.chenh.messagebox.in.InsAuthActivity;
 import com.chenh.messagebox.sina.WBGetAPI;
 import com.chenh.messagebox.sina.WBJumpAPI;
+import com.chenh.messagebox.twiiter.TwitterAuthActivity;
+import com.chenh.messagebox.twiiter.TwitterGetAPI;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 
@@ -144,7 +147,8 @@ public class ContentActivity extends AppCompatActivity {
         public void onRefresh() {
             if (loadState==0){
                 loadState=REFRESH_MODEL;
-                WBGetAPI.getWbGetAPI().getNewWB();
+                //WBGetAPI.getWbGetAPI().getNewWB();
+                TwitterGetAPI.getTwitterAPI().getNewTwitter();
             }
         }
         @Override
@@ -176,7 +180,8 @@ public class ContentActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
         }else if (id == R.id.action_refresh){
-            WBGetAPI.getWbGetAPI().getNewWB();
+            //WBGetAPI.getWbGetAPI().getNewWB();
+            startActivity(new Intent(ContentActivity.this, TwitterAuthActivity.class));
         }
 
         return super.onOptionsItemSelected(item);

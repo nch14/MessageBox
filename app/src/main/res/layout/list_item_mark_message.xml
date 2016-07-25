@@ -61,7 +61,8 @@
             android:text="正文"
             android:id="@+id/content"
             android:layout_marginLeft="16dp"
-            android:layout_marginTop="8dp" />
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="16dp" />
 
         <LinearLayout
         android:orientation="horizontal"
@@ -70,18 +71,19 @@
         android:id="@+id/pic_area"
         android:layout_marginTop="8dp">
 
-        <ImageView
+            <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/pic"
             android:layout_marginLeft="16dp" />
 
-        <ImageView
+            <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/pic2"
             android:layout_marginLeft="16dp" />
     </LinearLayout>
+
     </LinearLayout>
 
 
@@ -97,7 +99,8 @@
             android:layout_height="wrap_content"
             android:text="转发的正文"
             android:id="@+id/repost_text"
-            android:layout_marginLeft="16dp" />
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp" />
 
     </LinearLayout>
 

@@ -31,4 +31,10 @@ dependencies {
     compile project(':weiboSDK')
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     compile project(':Library')
+    compile files('libs/twitter4j-core-4.0.4.jar')
+    compile project(':instagram')
+    // https://mvnrepository.com/artifact/com.nostra13.universalimageloader/universal-image-loader
+    compile group: 'com.nostra13.universalimageloader', name: 'universal-image-loader', version: '1.9.5'
+    compile 'commons-io:commons-io:2.4'
+
 }

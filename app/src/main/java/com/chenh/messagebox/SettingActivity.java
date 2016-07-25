@@ -1,12 +1,14 @@
 package com.chenh.messagebox;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,6 +16,9 @@ import android.widget.Toast;
 import com.chenh.messagebox.fb.FBGetApi;
 import com.chenh.messagebox.sina.AccessTokenKeeper;
 import com.chenh.messagebox.sina.Constants;
+import com.chenh.messagebox.twiiter.FinishPinDialog;
+import com.chenh.messagebox.twiiter.LocalTwitterTool;
+import com.chenh.messagebox.twiiter.TwitterAuthActivity;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -26,8 +31,21 @@ import com.sina.weibo.sdk.auth.WeiboAuthListener;
 import com.sina.weibo.sdk.auth.sso.SsoHandler;
 import com.sina.weibo.sdk.exception.WeiboException;
 
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
+import twitter4j.Paging;
+import twitter4j.Status;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+import twitter4j.auth.RequestToken;
 
 public class SettingActivity extends AppCompatActivity {
 
@@ -53,6 +71,10 @@ public class SettingActivity extends AppCompatActivity {
     Switch qzoneSwitch;
     Switch twitterSwitch;
     Switch facebookSwitch;
+
+    private TextView mTwitterPin;
+    private ImageView mTwitterPinButton;
+    private boolean hasTwitterHistory;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,7 +93,10 @@ public class SettingActivity extends AppCompatActivity {
         facebookSwitch= (Switch) findViewById(R.id.switch_facebook);
         facebookSwitch.setOnClickListener(new MyOnCheckedChangeListener());
 
-
+        mTwitterPin= (TextView) findViewById(R.id.twitter_pin);
+        mTwitterPin.setOnClickListener(new MyOnCheckedChangeListener());
+        mTwitterPinButton=(ImageView)findViewById(R.id.imageView2);
+        mTwitterPinButton.setOnClickListener(new MyOnCheckedChangeListener());
 
         mAuthInfo = new AuthInfo(this, Constants.APP_KEY, Constants.REDIRECT_URL, Constants.SCOPE);
         mSsoHandler = new SsoHandler(SettingActivity.this, mAuthInfo);
@@ -84,6 +109,12 @@ public class SettingActivity extends AppCompatActivity {
             weiboSwitch.setChecked(true);
         }
 
+        twitter4j.auth.AccessToken accessToken =loadAccessToken(0);
+        if (accessToken!=null){
+            hasTwitterHistory=true;
+            twitterSwitch.setChecked(true);
+            LocalTwitterTool.getTwitter().setOAuthAccessToken(accessToken);
+        }
 
         callbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -113,6 +144,8 @@ public class SettingActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             int id=v.getId();
+            FragmentManager fm=null;
+            FinishPinDialog dialog=null;
             switch (id){
                 case R.id.switch_weibo:
                     if (weiboSwitch.isChecked()){
@@ -130,22 +163,32 @@ public class SettingActivity extends AppCompatActivity {
                     }
                     break;
                 case R.id.switch_twitter:
+                    if (twitterSwitch.isChecked()){
+                        //进行网页授权
+                        startActivity(new Intent(SettingActivity.this, TwitterAuthActivity.class));
+                    }else {
 
+                    }
                     break;
                 case R.id.switch_facebook:
                     AccessToken accessToken = AccessToken.getCurrentAccessToken();
                     if (accessToken == null || accessToken.isExpired()) {
                         LoginManager.getInstance().logInWithReadPermissions(SettingActivity.this, Arrays.asList("public_profile", "user_friends"));
                     }
-                    FBGetApi.getFB();
-
+                    //FBGetApi.getFB();
+                    break;
+                case R.id.twitter_pin:
+                    fm=getFragmentManager();
+                    dialog= FinishPinDialog.newInstance();
+                    dialog.show(fm,"");
+                    break;
+                case R.id.imageView2:
+                    fm=getFragmentManager();
+                    dialog= FinishPinDialog.newInstance();
+                    dialog.show(fm,"");
                     break;
             }
-            if (weiboSwitch.isEnabled()){
 
-            }else {
-
-            }
         }
     }
 
@@ -216,6 +259,76 @@ public class SettingActivity extends AppCompatActivity {
         public void onCancel() {
            /* Toast.makeText(WBAuthActivity.this,
                     R.string.weibosdk_demo_toast_auth_canceled, Toast.LENGTH_LONG).show();*/
+        }
+    }
+
+    public void finishTwitterPin(final String pin){
+        mTwitterPin.setText(pin);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Twitter twitter = TwitterFactory.getSingleton();
+                RequestToken requestToken = null;
+                try {
+                    requestToken = LocalTwitterTool.getRequestToken();
+                } catch (TwitterException e) {
+                    e.printStackTrace();
+                }
+                twitter4j.auth.AccessToken accessToken = null;
+                try{
+                    if(pin.length() > 0){
+                        accessToken = twitter.getOAuthAccessToken(requestToken, pin);
+                    }else{
+                        accessToken = twitter.getOAuthAccessToken();
+                    }
+                } catch (TwitterException te) {
+                    if (401 == te.getStatusCode()) {
+                        System.out.println("Unable to get the access token.");
+                    } else {
+                        te.printStackTrace();
+                    }
+                }
+                //persist to the accessToken for future reference.
+                try {
+                    storeAccessToken((int)twitter.verifyCredentials().getId() , accessToken);
+                } catch (TwitterException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    private void  readItems(){
+
+    }
+
+    private void storeAccessToken(int useId, twitter4j.auth.AccessToken accessToken){
+        File filesDir=getFilesDir();
+        File todoFile=new File(filesDir,"twitter.txt");
+        ArrayList<String> keys=new ArrayList<>();
+        keys.add(accessToken.getToken());
+        keys.add(accessToken.getTokenSecret());
+        try {
+            FileUtils.writeLines(todoFile,keys);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        //store accessToken.getToken()
+        //store accessToken.getTokenSecret()
+    }
+
+    private twitter4j.auth.AccessToken loadAccessToken(int useId){
+        File filesDir=getFilesDir();
+        File todoFile=new File(filesDir,"twitter.txt");
+        ArrayList<String> keys;
+        try {
+            keys=new ArrayList<String>(FileUtils.readLines(todoFile));
+            String token = keys.get(0);// load from a persistent store
+            String tokenSecret = keys.get(1); // load from a persistent store
+            return new twitter4j.auth.AccessToken(token, tokenSecret);
+        }catch (IOException e){
+            keys=new ArrayList<>();
+            return null;
         }
     }
 
