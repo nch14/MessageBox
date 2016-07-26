@@ -2,7 +2,9 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    buildToolsVersion '23.0.3'
+    useLibrary 'org.apache.http.legacy'
+
 
     defaultConfig {
         applicationId "com.chenh.messagebox"
@@ -34,10 +36,9 @@ dependencies {
     compile files('libs/twitter4j-core-4.0.4.jar')
     compile project(':instagram')
     // https://mvnrepository.com/artifact/com.nostra13.universalimageloader/universal-image-loader
-    compile group: 'com.nostra13.universalimageloader', name: 'universal-image-loader', version: '1.9.5'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'commons-io:commons-io:2.4'
     // https://mvnrepository.com/artifact/com.google.http-client/google-http-client
-    compile group: 'com.google.http-client', name: 'google-http-client', version: '1.21.0'
-
+    compile 'com.google.http-client:google-http-client:1.21.0'
 
 }

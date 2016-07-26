@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.chenh.messagebox.fb.FBGetApi;
 import com.chenh.messagebox.in.InsAuthActivity;
+import com.chenh.messagebox.in.MainActivity;
 import com.chenh.messagebox.sina.AccessTokenKeeper;
 import com.chenh.messagebox.sina.Constants;
 import com.chenh.messagebox.twiiter.FinishPinDialog;
@@ -176,9 +177,10 @@ public class SettingActivity extends AppCompatActivity {
                     }
                     break;
                 case R.id.switch_qzone:
-                    if(qzoneSwitch.isChecked()){
-                        startActivity(new Intent(SettingActivity.this, InsAuthActivity.class));
-                    }
+                    //if(qzoneSwitch.isChecked()){
+                        startActivity(new Intent(SettingActivity.this, MainActivity.class));
+                    //}
+                    qzoneSwitch.setChecked(false);
                     break;
                 case R.id.switch_twitter:
                     if (twitterSwitch.isChecked()){

@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.chenh.messagebox.ListView.view.WaterDropListView;
 import com.chenh.messagebox.in.InsAuthActivity;
+import com.chenh.messagebox.in.MainActivity;
 import com.chenh.messagebox.sina.WBGetAPI;
 import com.chenh.messagebox.sina.WBJumpAPI;
 import com.chenh.messagebox.twiiter.LocalTwitterTool;
@@ -205,7 +206,7 @@ public class ContentActivity extends AppCompatActivity {
             return true;
         }else if (id == R.id.action_refresh){
             //WBGetAPI.getWbGetAPI().getNewWB();
-            startActivity(new Intent(ContentActivity.this, TwitterAuthActivity.class));
+            startActivity(new Intent(ContentActivity.this, MainActivity.class));
         }
 
         return super.onOptionsItemSelected(item);

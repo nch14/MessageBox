@@ -16,6 +16,7 @@ import java.net.URL;
 public class FBGetApi {
 
     public static final String NEWS_FIELD="https://graph.facebook.com/me/home";
+    public static final String SEND="https://graph.facebook.com/me/home";
 
     public static void getFB(){
         new Thread(new Runnable() {
@@ -24,6 +25,48 @@ public class FBGetApi {
                 get(NEWS_FIELD+"?access_token="+ AccessToken.getCurrentAccessToken().getToken());
             }
         }).start();//这个start()方法不要忘记了
+    }
+
+
+    public static void sendFB(final String content){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                post(NEWS_FIELD+"?message="+content+"&amp&access_token="+ AccessToken.getCurrentAccessToken().getToken());
+            }
+        }).start();//这个start()方法不要忘记了
+    }
+
+    private static String post(String url) {
+        HttpURLConnection conn = null;
+        try {
+            // 利用string url构建URL对象
+            URL mURL = new URL(url);
+            conn = (HttpURLConnection) mURL.openConnection();
+
+            conn.setRequestMethod("POST");
+            conn.setReadTimeout(5000);
+            conn.setConnectTimeout(10000);
+
+            int responseCode = conn.getResponseCode();
+            if (responseCode == 200) {
+
+                InputStream is = conn.getInputStream();
+                String response = getStringFromInputStream(is);
+                return response;
+            } else {
+                throw new NetworkErrorException("response status is "+responseCode);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+        }
+
+        return null;
     }
 
     private static String get(String url) {
@@ -72,5 +115,4 @@ public class FBGetApi {
         os.close();
         return state;
     }
-
 }

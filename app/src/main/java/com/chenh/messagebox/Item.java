@@ -160,8 +160,8 @@ public class Item {
         }).start();
         //--------------------------------------------------
         where=TWITTER;
-
-        jumpURL=status.getExtendedMediaEntities()[0].getExpandedURL();
+        if (status.getExtendedMediaEntities().length!=0)
+            jumpURL=status.getExtendedMediaEntities()[0].getExpandedURL();
         if(status.getExtendedMediaEntities()!=null){
             allPics=new ArrayList<>();
             //BmiddleDownloader.downBitMap(status.pic_urls,allPics);

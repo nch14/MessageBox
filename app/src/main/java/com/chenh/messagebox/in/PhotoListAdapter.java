@@ -1,4 +1,4 @@
-/*package com.chenh.messagebox.in;
+package com.chenh.messagebox.in;
 
 import java.util.ArrayList;
 
@@ -92,4 +92,4 @@ public class PhotoListAdapter extends BaseAdapter {
 		
 		return imageIv;
 	}
-}*/
+}

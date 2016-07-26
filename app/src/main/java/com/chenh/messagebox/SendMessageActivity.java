@@ -17,10 +17,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.chenh.messagebox.fb.FBGetApi;
 import com.chenh.messagebox.sina.WBSendAPI;
 import com.chenh.messagebox.twiiter.TwitterSendAPI;
+import com.facebook.share.ShareApi;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -101,12 +104,24 @@ public class SendMessageActivity extends AppCompatActivity {
                         new WBSendAPI(SendMessageActivity.this,null).sendWeiboWithPic(mEditText.getText().toString(),bitmap);
                     if (mTwitterChoosed)
                         TwitterSendAPI.send(new String[]{mEditText.getText().toString(),bitmap.toString()});
+                    if (mFacebookChoosed){
+                        Bitmap image = bitmap;
+                        SharePhoto photo = new SharePhoto.Builder()
+                                .setBitmap(image)
+                                .build();
+                        SharePhotoContent content = new SharePhotoContent.Builder()
+                                .addPhoto(photo)
+                                .build();
+                        ShareApi.share(content, null);
+                    }
                 }else {
                     Toast.makeText(SendMessageActivity.this,"已经发布!",Toast.LENGTH_SHORT).show();
                     if (mSinaChoosed)
                         new WBSendAPI(SendMessageActivity.this,null).sendWeibo(mEditText.getText().toString());
                     if (mTwitterChoosed)
                         TwitterSendAPI.send(mEditText.getText().toString());
+                    if (mFacebookChoosed)
+                        FBGetApi.sendFB(mEditText.getText().toString());
                 }
 
                 this.finish();
@@ -158,6 +173,13 @@ public class SendMessageActivity extends AppCompatActivity {
                     }
                     break;
                 case R.id.imageView_facebook:
+                    if (!mFacebookChoosed) {
+                        ((ImageView) v).setImageResource(R.drawable.facebook_logo);
+                        mFacebookChoosed=true;
+                    }else {
+                        ((ImageView) v).setImageResource(R.drawable.facebook_logo_grey);
+                        mFacebookChoosed=false;
+                    }
                     break;
                 case R.id.imageView:
                     intent=new Intent();

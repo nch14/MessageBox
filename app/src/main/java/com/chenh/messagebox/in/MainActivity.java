@@ -1,4 +1,4 @@
-/*
+
 package com.chenh.messagebox.in;
 
 import java.net.URL;
@@ -38,12 +38,12 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.chenh.messagebox.R;
 
-*/
+
 /**
  * Instagram authentication.
  *  
  * @author Lorensius W. L. T
- **//*
+ **/
 
 
 
@@ -54,9 +54,9 @@ public class MainActivity extends Activity {
 	
 	private ProgressBar mLoadingPb;
 	private GridView mGridView;
-	
+
 	private static final String CLIENT_ID = "abd0b1b0d3ee4185a7e5cb66b57392ea";
-    private static final String CLIENT_SECRET = "a919f43496744abd95f0f78a74e98227";
+    private static final String CLIENT_SECRET = "67e866b676404312bf0f0d2bcd80596d";
     private static final String REDIRECT_URI = "www.baidu.com";
 	
 	@Override
@@ -241,4 +241,4 @@ public class MainActivity extends Activity {
 
 
 
-}*/
+}
