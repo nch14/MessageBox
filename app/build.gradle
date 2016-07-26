@@ -36,5 +36,8 @@ dependencies {
     // https://mvnrepository.com/artifact/com.nostra13.universalimageloader/universal-image-loader
     compile group: 'com.nostra13.universalimageloader', name: 'universal-image-loader', version: '1.9.5'
     compile 'commons-io:commons-io:2.4'
+    // https://mvnrepository.com/artifact/com.google.http-client/google-http-client
+    compile group: 'com.google.http-client', name: 'google-http-client', version: '1.21.0'
+
 
 }

@@ -26,17 +26,25 @@ import com.chenh.messagebox.ListView.view.WaterDropListView;
 import com.chenh.messagebox.in.InsAuthActivity;
 import com.chenh.messagebox.sina.WBGetAPI;
 import com.chenh.messagebox.sina.WBJumpAPI;
+import com.chenh.messagebox.twiiter.LocalTwitterTool;
 import com.chenh.messagebox.twiiter.TwitterAuthActivity;
 import com.chenh.messagebox.twiiter.TwitterGetAPI;
+import com.chenh.messagebox.util.CenterController;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class ContentActivity extends AppCompatActivity {
 
     public static final int JUMP_TO_WEIBO=6;
     public static final int REFRESH_ITEMS=7;
+    public static final int JUMP_TO_TWITTER=8;
+
     public static final int SEND_FAILED=9;
 
     public static final int LOAD_MORE_MODEL=1000;
@@ -80,6 +88,7 @@ public class ContentActivity extends AppCompatActivity {
             public void handleMessage(Message msg) {
                 int what=msg.what;
                 String message = msg.obj.toString();
+                Intent intent;
                 switch (what){
                     case 0:
                         break;
@@ -88,9 +97,15 @@ public class ContentActivity extends AppCompatActivity {
                         Toast.makeText(ContentActivity.this,"本地存储的Item length"+LocalItem.getLocalItem().items.size(),Toast.LENGTH_SHORT).show();
                         break;
                     case JUMP_TO_WEIBO:
-                        Intent intent = new Intent();
+                        intent = new Intent();
                         intent.setAction(Intent.ACTION_VIEW);
                         intent.setData(Uri.parse("http://m.weibo.cn/"+message));//设置一个URI地址
+                        startActivity(intent);//用startActivity打开这个指定的网页。
+                        break;
+                    case JUMP_TO_TWITTER:
+                        intent = new Intent();
+                        intent.setAction(Intent.ACTION_VIEW);
+                        intent.setData(Uri.parse(message));//设置一个URI地址
                         startActivity(intent);//用startActivity打开这个指定的网页。
                         break;
                     case REFRESH_ITEMS:
@@ -132,12 +147,22 @@ public class ContentActivity extends AppCompatActivity {
                     case Item.WEIBO:
                         new WBJumpAPI(ContentActivity.this,mHandler,item.user.id).getBase62(item.mid);
                         break;
+                    case Item.TWITTER:
+                        mHandler.sendMessage(mHandler.obtainMessage(JUMP_TO_TWITTER,item.jumpURL));
+                        break;
                 }
 
             }
         });
 
-        WBGetAPI.createInstance(ContentActivity.this,mHandler);
+        CenterController.createCenterController(ContentActivity.this,mHandler);
+
+        twitter4j.auth.AccessToken accessToken =loadAccessToken(0);
+        if (accessToken!=null){
+            LocalTwitterTool.getTwitter().setOAuthAccessToken(accessToken);
+            CenterController.getCenterController().setTwitterModule(true);
+        }
+        //WBGetAPI.createInstance(ContentActivity.this,mHandler);
 
     }
 
@@ -147,15 +172,14 @@ public class ContentActivity extends AppCompatActivity {
         public void onRefresh() {
             if (loadState==0){
                 loadState=REFRESH_MODEL;
-                //WBGetAPI.getWbGetAPI().getNewWB();
-                TwitterGetAPI.getTwitterAPI().getNewTwitter();
+                CenterController.getCenterController().refresh();
             }
         }
         @Override
         public void onLoadMore() {
             if (loadState==0) {
                 loadState = LOAD_MORE_MODEL;
-                WBGetAPI.getWbGetAPI().getNextWB();
+                CenterController.getCenterController().getNext();
             }
         }
     }
@@ -205,12 +229,26 @@ public class ContentActivity extends AppCompatActivity {
                 if (c.sourceItem!=null){
                     convertView=getLayoutInflater().inflate(R.layout.list_item_mark_message,null);
                     TextView repostContent = (TextView) convertView.findViewById(R.id.repost_text);
-                    repostContent.setText("@"+c.sourceItem.user.screen_name+":"+c.sourceItem.text);
+                    repostContent.setText("@"+c.sourceItem.userScreenName+":"+c.sourceItem.text);
                 }else {
                     convertView=getLayoutInflater().inflate(R.layout.list_item_raw_message,null);
                 }
+
                 ImageView partform= (ImageView) convertView.findViewById(R.id.where);
-                partform.setImageResource(R.drawable.ic_com_sina_weibo_sdk_logo);
+                switch (c.where){
+                    case Item.WEIBO:
+                        partform.setImageResource(R.drawable.ic_com_sina_weibo_sdk_logo);
+                        break;
+                    case Item.FACEBOOK:
+                        break;
+                    case Item.QZONE:
+                        break;
+                    case Item.TWITTER:
+                        partform.setImageResource(R.drawable.twitter_logo);
+                        break;
+                }
+
+
 
                 if (c.allPics!=null){
                     if (c.allPics.size()!=0){
@@ -231,7 +269,7 @@ public class ContentActivity extends AppCompatActivity {
                     }
                 }
                 TextView user=(TextView) convertView.findViewById(R.id.user_name);
-                user.setText(c.user.screen_name);
+                user.setText(c.userScreenName);
 
                 TextView postTime=(TextView) convertView.findViewById(R.id.post_time);
                 postTime.setText(c.created_at);
@@ -251,5 +289,21 @@ public class ContentActivity extends AppCompatActivity {
         Resources res = this.getResources();
         return TypedValue.applyDimension(unit, value, res.getDisplayMetrics());
     }
+
+    private twitter4j.auth.AccessToken loadAccessToken(int useId){
+        File filesDir=getFilesDir();
+        File todoFile=new File(filesDir,"twitter.txt");
+        ArrayList<String> keys;
+        try {
+            keys=new ArrayList<String>(FileUtils.readLines(todoFile));
+            String token = keys.get(0);// load from a persistent store
+            String tokenSecret = keys.get(1); // load from a persistent store
+            return new twitter4j.auth.AccessToken(token, tokenSecret);
+        }catch (IOException e){
+            keys=new ArrayList<>();
+            return null;
+        }
+    }
+
 
 }

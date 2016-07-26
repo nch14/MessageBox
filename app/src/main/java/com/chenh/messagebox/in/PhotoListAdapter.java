@@ -1,5 +1,4 @@
-/*
-package com.chenh.messagebox.in;
+/*package com.chenh.messagebox.in;
 
 import java.util.ArrayList;
 

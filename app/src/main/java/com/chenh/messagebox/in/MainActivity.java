@@ -43,8 +43,10 @@ import com.chenh.messagebox.R;
  * Instagram authentication.
  *  
  * @author Lorensius W. L. T
- *
- *//*
+ **//*
+
+
+
 
 public class MainActivity extends Activity {
 	private InstagramSession mInstagramSession;
@@ -236,5 +238,7 @@ public class MainActivity extends Activity {
         	}
         }                
     }
+
+
 
 }*/

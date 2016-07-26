@@ -66,6 +66,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/imageView_twitter"
+            android:src="@drawable/twitter_logo_grey"
             android:layout_marginLeft="12dp" />
 
         <ImageView

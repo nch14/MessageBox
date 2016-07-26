@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import com.chenh.messagebox.ContentActivity;
 import com.chenh.messagebox.LocalItem;
+import com.chenh.messagebox.util.CenterController;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.sina.weibo.sdk.exception.WeiboException;
 import com.sina.weibo.sdk.net.RequestListener;
@@ -42,6 +43,10 @@ public class WBGetAPI {
         mAccessToken = AccessTokenKeeper.readAccessToken(context);
         // 对statusAPI实例化
         mStatusesAPI = new StatusesAPI(context, Constants.APP_KEY, mAccessToken);
+
+        if (mAccessToken!=null){
+            CenterController.getCenterController().setSinaModule(true);
+        }
     }
 
 
@@ -70,8 +75,16 @@ public class WBGetAPI {
                     // 调用 StatusList#parse 解析字符串成微博列表对象
                     StatusList statuses = StatusList.parse(response);
                     if (statuses != null && statuses.total_number > 0) {
+                        while (LocalItem.getLocalItem().updating){
+                            try {
+                                Thread.sleep(100);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
                         LocalItem.getLocalItem().addItem(statuses.statusList);
-                        mHandler.sendMessage(mHandler.obtainMessage(ContentActivity.REFRESH_ITEMS,""));
+                        CenterController.getCenterController().setWeiboLoadState(CenterController.WEIBO_LOADED);
+                        //mHandler.sendMessage(mHandler.obtainMessage(ContentActivity.REFRESH_ITEMS,""));
                     }
                 }else {
                     //Toast.makeText(WBStatusAPIActivity.this, response, Toast.LENGTH_LONG).show();

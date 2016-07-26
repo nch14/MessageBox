@@ -16,7 +16,7 @@ public class InsAuthActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ins_auth);
 //https://api.instagram.com/oauth/authorize/?client_id=abd0b1b0d3ee4185a7e5cb66b57392ea&redirect_uri=www.baidu.com&response_type=token
-        String url="https://api.instagram.com/oauth/authorize/?client_id="+R.string.instagram_app_id+"&redirect_uri=www.baidu.com&response_type=token";
+        String url="https://api.instagram.com/oauth/authorize/?client_id=abd0b1b0d3ee4185a7e5cb66b57392ea&redirect_uri=www.baidu.com&response_type=token";
 
         mWebView= (WebView) findViewById(R.id.WebView);
 

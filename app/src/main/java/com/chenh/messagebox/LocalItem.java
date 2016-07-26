@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 /**
+ * 本地新鲜事
  * Created by chenh on 2016/7/17.
  */
 public class LocalItem {
@@ -17,6 +18,8 @@ public class LocalItem {
     public long weiboIdEnd;
 
     public long weiboIdStart;
+
+    public boolean updating;
 
 
     private static LocalItem localItem;
@@ -43,7 +46,7 @@ public class LocalItem {
     //添加新浪微博
     public void addItem(ArrayList<Status> statuses){
         //items.remove(endItem);
-
+        updating=true;
         if (statuses==null)
             return;
 
@@ -71,16 +74,19 @@ public class LocalItem {
         }
         sort();
         //items.add(endItem);
+        updating=false;
     }
 
     //添加推文
     public void addTwitterItems(ArrayList<twitter4j.Status> statuses){
+        updating=true;
         if (statuses==null)
             return;
         for(int i=0;i<statuses.size();i++){
             items.add(new Item(statuses.get(i)));
         }
         sort();
+        updating=false;
     }
 
 

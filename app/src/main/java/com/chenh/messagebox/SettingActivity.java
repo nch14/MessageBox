@@ -5,8 +5,11 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -14,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chenh.messagebox.fb.FBGetApi;
+import com.chenh.messagebox.in.InsAuthActivity;
 import com.chenh.messagebox.sina.AccessTokenKeeper;
 import com.chenh.messagebox.sina.Constants;
 import com.chenh.messagebox.twiiter.FinishPinDialog;
@@ -80,6 +84,20 @@ public class SettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle("授权管理");
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+
+        ImageView imageView=(ImageView)findViewById(R.id.imageView3);
+        imageView.setImageResource(R.drawable.head_59);
 
         weiboSwitch= (Switch) findViewById(R.id.switch_weibo);
         weiboSwitch.setOnClickListener(new MyOnCheckedChangeListener());
@@ -158,8 +176,8 @@ public class SettingActivity extends AppCompatActivity {
                     }
                     break;
                 case R.id.switch_qzone:
-                    if(qzoneSwitch.isEnabled()){
-
+                    if(qzoneSwitch.isChecked()){
+                        startActivity(new Intent(SettingActivity.this, InsAuthActivity.class));
                     }
                     break;
                 case R.id.switch_twitter:
@@ -349,5 +367,30 @@ public class SettingActivity extends AppCompatActivity {
             message = getString(R.string.weibosdk_demo_token_has_existed) + "\n" + message;
         }
         //mTokenText.setText(message);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_settings, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            Intent intent=new Intent(SettingActivity.this,ProfileActivity.class);
+            startActivity(intent);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

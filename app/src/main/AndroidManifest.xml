@@ -45,7 +45,10 @@
             android:value="@string/facebook_app_id" />
 
         <activity android:name=".in.InsAuthActivity" />
-        <activity android:name=".twiiter.TwitterAuthActivity"></activity>
+        <activity android:name=".twiiter.TwitterAuthActivity" />
+        <activity
+            android:name=".ProfileActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

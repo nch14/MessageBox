@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 /**
+ * 新鲜事的统一类型
  * Created by chenh on 2016/7/17.
  */
 public class Item {
@@ -44,6 +45,8 @@ public class Item {
     public String userImageURL;
 
     public String ContentId;
+
+    public String jumpURL;
 
 
 
@@ -158,6 +161,7 @@ public class Item {
         //--------------------------------------------------
         where=TWITTER;
 
+        jumpURL=status.getExtendedMediaEntities()[0].getExpandedURL();
         if(status.getExtendedMediaEntities()!=null){
             allPics=new ArrayList<>();
             //BmiddleDownloader.downBitMap(status.pic_urls,allPics);

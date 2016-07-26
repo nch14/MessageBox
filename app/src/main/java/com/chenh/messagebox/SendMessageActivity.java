@@ -18,7 +18,9 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.chenh.messagebox.sina.WBSendAPI;
+import com.chenh.messagebox.twiiter.TwitterSendAPI;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -95,10 +97,16 @@ public class SendMessageActivity extends AppCompatActivity {
             if (mQzoneChoosed||mSinaChoosed||mFacebookChoosed||mTwitterChoosed){
                 if (mAddPhoto){
                     Toast.makeText(SendMessageActivity.this,"已经发布!",Toast.LENGTH_SHORT).show();
-                    new WBSendAPI(SendMessageActivity.this,null).sendWeiboWithPic(mEditText.getText().toString(),bitmap);
+                    if (mSinaChoosed)
+                        new WBSendAPI(SendMessageActivity.this,null).sendWeiboWithPic(mEditText.getText().toString(),bitmap);
+                    if (mTwitterChoosed)
+                        TwitterSendAPI.send(new String[]{mEditText.getText().toString(),bitmap.toString()});
                 }else {
                     Toast.makeText(SendMessageActivity.this,"已经发布!",Toast.LENGTH_SHORT).show();
-                    new WBSendAPI(SendMessageActivity.this,null).sendWeibo(mEditText.getText().toString());
+                    if (mSinaChoosed)
+                        new WBSendAPI(SendMessageActivity.this,null).sendWeibo(mEditText.getText().toString());
+                    if (mTwitterChoosed)
+                        TwitterSendAPI.send(mEditText.getText().toString());
                 }
 
                 this.finish();
@@ -141,6 +149,13 @@ public class SendMessageActivity extends AppCompatActivity {
                     }
                     break;
                 case R.id.imageView_twitter:
+                    if (!mTwitterChoosed) {
+                        ((ImageView) v).setImageResource(R.drawable.twitter_logo);
+                        mTwitterChoosed=true;
+                    }else {
+                        ((ImageView) v).setImageResource(R.drawable.twitter_logo_grey);
+                        mTwitterChoosed=false;
+                    }
                     break;
                 case R.id.imageView_facebook:
                     break;
